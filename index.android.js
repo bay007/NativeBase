@@ -25,6 +25,17 @@ export default class AwesomeNativeBase extends Component {
       Login.setResponseMessage("Ingrese datos antes de continuar")
       return
     }
+    var email_pattern = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+    if (!email_pattern.test(Login.email.trim())) {
+      Login.setResponseMessage("Éste no es un email válido")
+      return
+    }
+    var password_pattern = /^(?=\S*[a-z])(?=\S*[A-Z])(?=\S*\d)(?=\S*[^\w\s])\S{8,}$/;
+    if (!password_pattern.test(Login.password.trim())) {
+      Login.setResponseMessage("Ingrese una contraseña mas robusta")
+      return
+    }
+
     Login.setLoading(true)
     fetch('https://facebook.github.io/react-native/movies.json')
       .then((response) => response.json())
@@ -51,6 +62,7 @@ export default class AwesomeNativeBase extends Component {
               <InputGroup>
                 <Icon name="md-person" style={{ color: '#0A69FE' }} />
                 <Input
+                  style={{ color: '#00C497' }}
                   onChangeText={(text) => Login.setEmail(text)}
                   value={Login.email}
                   placeholder={"Email Address "} />
@@ -58,7 +70,7 @@ export default class AwesomeNativeBase extends Component {
             </ListItem>
             <ListItem>
               <InputGroup>
-                <Icon name="md-unlock" style={{ color: '#0A69FE' }} />
+                <Icon name="md-unlock" style={{ color: '#00C497' }} />
                 <Input
                   onChangeText={(text) => Login.setPassword(text)}
                   value={Login.password}
@@ -67,15 +79,12 @@ export default class AwesomeNativeBase extends Component {
               </InputGroup>
             </ListItem>
           </List>
-          <Button primary active={!Login.isLoading} onPress={() => { this.login() }}>
-            <Text>Login {Login.password}</Text>
+          <Button primary full disabled={Login.isLoading} onPress={() => { this.login() }}>
+            <Text>Login</Text>
           </Button>
           {
             Login.isLoading ? <Spinner color='green' /> : <Text> {Login.responseMessage}</Text>
           }
-
-
-
         </Content>
       </Container >
     );
