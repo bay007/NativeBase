@@ -16,6 +16,7 @@ var config = {
 };
 const app = firebase.initializeApp(config);
 database = app.database().ref()
+_auth = app.auth()
 
 function DelayPromise(delay) {
   //return a function that accepts a single variable
@@ -65,35 +66,26 @@ export default class AwesomeNativeBase extends Component {
     }
 
     Login.setLoading(true)
-    database.once("value")
-      .then(function (snapshot) {
-        k = snapshot.child("/users").val()
-        console.log("valor: " + k)
-        data = ""
-        k.map(k => {
-          console.log(k)
-          data += k.email + "\n"
-        })
-        Login.setResponseMessage(data);
+    _auth.signInWithEmailAndPassword(Login.email.trim(), Login.password.trim())
+      .then(() => {
+        Login.setIsLogued(true)
         Login.setLoading(false)
-      }).catch((error) => {
-        Login.setResponseMessage("No se pudlo logrear")
-        Login.setLoading(false)
-        console.log(error)
-      });
-    /*
-    fetch('https://facebook.github.io/react-native/movies.json')
-      .then((response) => response.json())
-      .then(DelayPromise(1000))
-      .then((responseJson) => {
-        Login.setResponseMessage(responseJson.title);
-        Login.setLoading(false)
+        Login.setResponseMessage('Sesion iniciada');
       })
-      .catch((error) => {
-        Login.setResponseMessage("No se pudlo logrear")
+      .catch(function (error) {
+        console.log(Login.email.trim())
+        // Handle Errors here.
+        var errorCode = error.code;
+        var errorMessage = error.message;
+        if (errorCode === 'auth/wrong-password') {
+          Login.setResponseMessage('Wrong password.');
+        } else {
+          Login.setResponseMessage(errorMessage);
+          console.log(errorMessage);
+        }
         Login.setLoading(false)
-      });*/
-
+        console.log(error);
+      });
   }
 
   render = () => {

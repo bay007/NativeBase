@@ -8,6 +8,12 @@ class login {
     @observable password = "Axa2010*A";
     @observable isLoading = false
     @observable responseMessage = "-"
+    @observable isLoged = false
+
+    @action
+    setIsLogued(state) {
+        this.isLoged = state
+    }
 
     @action
     setEmail(email) {
