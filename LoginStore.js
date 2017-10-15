@@ -2,9 +2,10 @@
 
 import { observable, action, computed } from "mobx";
 
+
 class login {
-    @observable email = "";
-    @observable password = "";
+    @observable email = "tnt_Code@hotmail.com";
+    @observable password = "Axa2010*A";
     @observable isLoading = false
     @observable responseMessage = "-"
 
