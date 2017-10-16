@@ -37,5 +37,5 @@ class login {
 
 }
 
-const Login = new login()
-export default Login
+const LoginStore = new login()
+export default LoginStore
